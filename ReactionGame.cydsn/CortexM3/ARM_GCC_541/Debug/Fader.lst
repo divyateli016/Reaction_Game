@@ -1,0 +1,1368 @@
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"Fader.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.LED_FADER,"ax",%progbits
+  20              		.align	2
+  21              		.global	LED_FADER
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	LED_FADER, %function
+  25              	LED_FADER:
+  26              	.LFB110:
+  27              		.file 1 "source\\asw\\Fader.c"
+   1:source\asw/Fader.c **** #include "project.h"
+   2:source\asw/Fader.c **** #include "led.h"
+   3:source\asw/Fader.c **** #include "global.h"
+   4:source\asw/Fader.c **** 
+   5:source\asw/Fader.c **** /**
+   6:source\asw/Fader.c **** *enum for LED_FADER_STATE for all LEDs which will excute sequentially to control the patern
+   7:source\asw/Fader.c **** **/
+   8:source\asw/Fader.c **** typedef enum {
+   9:source\asw/Fader.c ****     LED_FADER_STATE_RED,
+  10:source\asw/Fader.c ****     LED_FADER_STATE_YELLOW,
+  11:source\asw/Fader.c ****     LED_FADER_STATE_GREEN,
+  12:source\asw/Fader.c ****     LED_FADER_STATE_DONE
+  13:source\asw/Fader.c **** } LED_FADER_State_t;
+  14:source\asw/Fader.c **** 
+  15:source\asw/Fader.c **** /*****************************************************************************/
+  16:source\asw/Fader.c **** /* Local pre-processor symbols/macros ('#define')                            */
+  17:source\asw/Fader.c **** /*****************************************************************************/
+  18:source\asw/Fader.c **** 
+  19:source\asw/Fader.c **** /*****************************************************************************/
+  20:source\asw/Fader.c **** /* Global variable definitions (declared in header file with 'extern')       */
+  21:source\asw/Fader.c **** /*****************************************************************************/
+  22:source\asw/Fader.c **** static LED_FADER_State_t faderState = LED_FADER_STATE_RED;
+  23:source\asw/Fader.c **** static uint8_t redBrightness = 0;
+  24:source\asw/Fader.c **** static uint8_t yellowBrightness = 0;
+  25:source\asw/Fader.c **** static uint8_t greenBrightness = 0;
+  26:source\asw/Fader.c **** 
+  27:source\asw/Fader.c **** 
+  28:source\asw/Fader.c **** ///*****************************************************************************/
+  29:source\asw/Fader.c **** ///* Function implementation - global ('extern') and local ('static')          */
+  30:source\asw/Fader.c **** ///*****************************************************************************/
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 2
+
+
+  31:source\asw/Fader.c **** /**
+  32:source\asw/Fader.c **** Function definition for fader implementation.
+  33:source\asw/Fader.c **** **/
+  34:source\asw/Fader.c **** 
+  35:source\asw/Fader.c **** RC_t LED_FADER()
+  36:source\asw/Fader.c **** {
+  28              		.loc 1 36 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 10B5     		push	{r4, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 4, -8
+  35              		.cfi_offset 14, -4
+  37:source\asw/Fader.c ****     switch (faderState)
+  36              		.loc 1 37 0
+  37 0002 244B     		ldr	r3, .L9
+  38 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  39 0006 032B     		cmp	r3, #3
+  40 0008 41D8     		bhi	.L2
+  41 000a DFE803F0 		tbb	[pc, r3]
+  42              	.L4:
+  43 000e 02       		.byte	(.L3-.L4)/2
+  44 000f 10       		.byte	(.L5-.L4)/2
+  45 0010 24       		.byte	(.L6-.L4)/2
+  46 0011 3C       		.byte	(.L7-.L4)/2
+  47              		.p2align 1
+  48              	.L3:
+  38:source\asw/Fader.c ****     {
+  39:source\asw/Fader.c ****         case LED_FADER_STATE_RED:
+  40:source\asw/Fader.c ****             PWM_LED_RED_WriteCompare(redBrightness++);
+  49              		.loc 1 40 0
+  50 0012 204C     		ldr	r4, .L9
+  51 0014 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+  52 0016 431C     		adds	r3, r0, #1
+  53 0018 6370     		strb	r3, [r4, #1]
+  54 001a FFF7FEFF 		bl	PWM_LED_RED_WriteCompare
+  55              	.LVL0:
+  41:source\asw/Fader.c ****             if (redBrightness >= 255)
+  56              		.loc 1 41 0
+  57 001e 6378     		ldrb	r3, [r4, #1]	@ zero_extendqisi2
+  58 0020 FF2B     		cmp	r3, #255
+  59 0022 34D1     		bne	.L2
+  42:source\asw/Fader.c ****             {
+  43:source\asw/Fader.c ****                 faderState = LED_FADER_STATE_YELLOW;
+  60              		.loc 1 43 0
+  61 0024 0122     		movs	r2, #1
+  62 0026 2270     		strb	r2, [r4]
+  44:source\asw/Fader.c ****                 yellowBrightness = 0;
+  63              		.loc 1 44 0
+  64 0028 0022     		movs	r2, #0
+  65 002a A270     		strb	r2, [r4, #2]
+  66 002c 2FE0     		b	.L2
+  67              	.L5:
+  45:source\asw/Fader.c ****             }
+  46:source\asw/Fader.c ****             break;
+  47:source\asw/Fader.c **** 
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 3
+
+
+  48:source\asw/Fader.c ****         case LED_FADER_STATE_YELLOW:
+  49:source\asw/Fader.c ****             PWM_LED_YELLOW_WriteCompare(yellowBrightness++);
+  68              		.loc 1 49 0
+  69 002e 194C     		ldr	r4, .L9
+  70 0030 A078     		ldrb	r0, [r4, #2]	@ zero_extendqisi2
+  71 0032 431C     		adds	r3, r0, #1
+  72 0034 A370     		strb	r3, [r4, #2]
+  73 0036 FFF7FEFF 		bl	PWM_LED_YELLOW_WriteCompare
+  74              	.LVL1:
+  50:source\asw/Fader.c ****             PWM_LED_RED_WriteCompare(--redBrightness);
+  75              		.loc 1 50 0
+  76 003a 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+  77 003c 0138     		subs	r0, r0, #1
+  78 003e C0B2     		uxtb	r0, r0
+  79 0040 6070     		strb	r0, [r4, #1]
+  80 0042 FFF7FEFF 		bl	PWM_LED_RED_WriteCompare
+  81              	.LVL2:
+  51:source\asw/Fader.c ****             if (yellowBrightness >= 255)
+  82              		.loc 1 51 0
+  83 0046 A378     		ldrb	r3, [r4, #2]	@ zero_extendqisi2
+  84 0048 FF2B     		cmp	r3, #255
+  85 004a 20D1     		bne	.L2
+  52:source\asw/Fader.c ****             {
+  53:source\asw/Fader.c ****                 faderState = LED_FADER_STATE_GREEN;
+  86              		.loc 1 53 0
+  87 004c 0222     		movs	r2, #2
+  88 004e 2270     		strb	r2, [r4]
+  54:source\asw/Fader.c ****                 greenBrightness = 0;
+  89              		.loc 1 54 0
+  90 0050 0022     		movs	r2, #0
+  91 0052 E270     		strb	r2, [r4, #3]
+  92 0054 1BE0     		b	.L2
+  93              	.L6:
+  55:source\asw/Fader.c ****             }
+  56:source\asw/Fader.c ****             break;
+  57:source\asw/Fader.c **** 
+  58:source\asw/Fader.c ****         case LED_FADER_STATE_GREEN:
+  59:source\asw/Fader.c ****             PWM_LED_GREEN_WriteCompare(greenBrightness++);
+  94              		.loc 1 59 0
+  95 0056 0F4C     		ldr	r4, .L9
+  96 0058 E078     		ldrb	r0, [r4, #3]	@ zero_extendqisi2
+  97 005a 431C     		adds	r3, r0, #1
+  98 005c E370     		strb	r3, [r4, #3]
+  99 005e FFF7FEFF 		bl	PWM_LED_GREEN_WriteCompare
+ 100              	.LVL3:
+  60:source\asw/Fader.c ****             PWM_LED_YELLOW_WriteCompare(--yellowBrightness);
+ 101              		.loc 1 60 0
+ 102 0062 A078     		ldrb	r0, [r4, #2]	@ zero_extendqisi2
+ 103 0064 0138     		subs	r0, r0, #1
+ 104 0066 C0B2     		uxtb	r0, r0
+ 105 0068 A070     		strb	r0, [r4, #2]
+ 106 006a FFF7FEFF 		bl	PWM_LED_YELLOW_WriteCompare
+ 107              	.LVL4:
+  61:source\asw/Fader.c ****             PWM_LED_RED_WriteCompare(--redBrightness);
+ 108              		.loc 1 61 0
+ 109 006e 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+ 110 0070 0138     		subs	r0, r0, #1
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 4
+
+
+ 111 0072 C0B2     		uxtb	r0, r0
+ 112 0074 6070     		strb	r0, [r4, #1]
+ 113 0076 FFF7FEFF 		bl	PWM_LED_RED_WriteCompare
+ 114              	.LVL5:
+  62:source\asw/Fader.c ****             if (greenBrightness >= 255)
+ 115              		.loc 1 62 0
+ 116 007a E378     		ldrb	r3, [r4, #3]	@ zero_extendqisi2
+ 117 007c FF2B     		cmp	r3, #255
+ 118 007e 06D1     		bne	.L2
+  63:source\asw/Fader.c ****             {
+  64:source\asw/Fader.c ****                 faderState = LED_FADER_STATE_DONE;
+ 119              		.loc 1 64 0
+ 120 0080 0322     		movs	r2, #3
+ 121 0082 2270     		strb	r2, [r4]
+ 122 0084 03E0     		b	.L2
+ 123              	.L7:
+  65:source\asw/Fader.c ****             }
+  66:source\asw/Fader.c ****             break;
+  67:source\asw/Fader.c **** 
+  68:source\asw/Fader.c ****         case LED_FADER_STATE_DONE:
+  69:source\asw/Fader.c ****             // Sequence completed; optionally restart
+  70:source\asw/Fader.c ****             faderState = LED_FADER_STATE_RED;
+ 124              		.loc 1 70 0
+ 125 0086 034B     		ldr	r3, .L9
+ 126 0088 0022     		movs	r2, #0
+ 127 008a 1A70     		strb	r2, [r3]
+  71:source\asw/Fader.c ****             redBrightness = 0;
+ 128              		.loc 1 71 0
+ 129 008c 5A70     		strb	r2, [r3, #1]
+ 130              	.L2:
+  72:source\asw/Fader.c ****             break;
+  73:source\asw/Fader.c ****     }
+  74:source\asw/Fader.c **** 
+  75:source\asw/Fader.c ****     return RC_SUCCESS;
+  76:source\asw/Fader.c **** }...
+ 131              		.loc 1 76 0
+ 132 008e 0020     		movs	r0, #0
+ 133 0090 10BD     		pop	{r4, pc}
+ 134              	.L10:
+ 135 0092 00BF     		.align	2
+ 136              	.L9:
+ 137 0094 00000000 		.word	.LANCHOR0
+ 138              		.cfi_endproc
+ 139              	.LFE110:
+ 140              		.size	LED_FADER, .-LED_FADER
+ 141              		.bss
+ 142              		.set	.LANCHOR0,. + 0
+ 143              		.type	faderState, %object
+ 144              		.size	faderState, 1
+ 145              	faderState:
+ 146 0000 00       		.space	1
+ 147              		.type	redBrightness, %object
+ 148              		.size	redBrightness, 1
+ 149              	redBrightness:
+ 150 0001 00       		.space	1
+ 151              		.type	yellowBrightness, %object
+ 152              		.size	yellowBrightness, 1
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 5
+
+
+ 153              	yellowBrightness:
+ 154 0002 00       		.space	1
+ 155              		.type	greenBrightness, %object
+ 156              		.size	greenBrightness, 1
+ 157              	greenBrightness:
+ 158 0003 00       		.space	1
+ 159              		.text
+ 160              	.Letext0:
+ 161              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 162              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 163              		.file 4 "Generated_Source\\PSoC5/ErikaOS_1_common_ee_types.inc"
+ 164              		.file 5 "Generated_Source\\PSoC5/ErikaOS_1_cortex_mx_ee_cpu.inc"
+ 165              		.file 6 ".\\source\\bsw/global.h"
+ 166              		.file 7 ".\\source\\bsw/led.h"
+ 167              		.file 8 "Generated_Source\\PSoC5/ErikaOS_1_ee_oo_intfunc.inc"
+ 168              		.file 9 "Generated_Source\\PSoC5/ErikaOS_1_cortex_mx_ee_context.inc"
+ 169              		.file 10 "Generated_Source\\PSoC5/ErikaOS_1_common_ee_primitives.inc"
+ 170              		.file 11 "Generated_Source\\PSoC5/core_cm3.h"
+ 171              		.file 12 "Generated_Source\\PSoC5/PWM_LED_RED.h"
+ 172              		.file 13 "Generated_Source\\PSoC5/PWM_LED_YELLOW.h"
+ 173              		.file 14 "Generated_Source\\PSoC5/PWM_LED_GREEN.h"
+ 174              		.section	.debug_info,"",%progbits
+ 175              	.Ldebug_info0:
+ 176 0000 16030000 		.4byte	0x316
+ 177 0004 0400     		.2byte	0x4
+ 178 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 179 000a 04       		.byte	0x4
+ 180 000b 01       		.uleb128 0x1
+ 181 000c 4A030000 		.4byte	.LASF72
+ 182 0010 0C       		.byte	0xc
+ 183 0011 12020000 		.4byte	.LASF73
+ 184 0015 F0020000 		.4byte	.LASF74
+ 185 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 186 001d 00000000 		.4byte	0
+ 187 0021 00000000 		.4byte	.Ldebug_line0
+ 188 0025 02       		.uleb128 0x2
+ 189 0026 01       		.byte	0x1
+ 190 0027 06       		.byte	0x6
+ 191 0028 7F020000 		.4byte	.LASF0
+ 192 002c 03       		.uleb128 0x3
+ 193 002d E5010000 		.4byte	.LASF4
+ 194 0031 02       		.byte	0x2
+ 195 0032 1D       		.byte	0x1d
+ 196 0033 37000000 		.4byte	0x37
+ 197 0037 02       		.uleb128 0x2
+ 198 0038 01       		.byte	0x1
+ 199 0039 08       		.byte	0x8
+ 200 003a 4A020000 		.4byte	.LASF1
+ 201 003e 02       		.uleb128 0x2
+ 202 003f 02       		.byte	0x2
+ 203 0040 05       		.byte	0x5
+ 204 0041 3D000000 		.4byte	.LASF2
+ 205 0045 02       		.uleb128 0x2
+ 206 0046 02       		.byte	0x2
+ 207 0047 07       		.byte	0x7
+ 208 0048 37030000 		.4byte	.LASF3
+ 209 004c 03       		.uleb128 0x3
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 6
+
+
+ 210 004d AD040000 		.4byte	.LASF5
+ 211 0051 02       		.byte	0x2
+ 212 0052 3F       		.byte	0x3f
+ 213 0053 57000000 		.4byte	0x57
+ 214 0057 02       		.uleb128 0x2
+ 215 0058 04       		.byte	0x4
+ 216 0059 05       		.byte	0x5
+ 217 005a B1010000 		.4byte	.LASF6
+ 218 005e 02       		.uleb128 0x2
+ 219 005f 04       		.byte	0x4
+ 220 0060 07       		.byte	0x7
+ 221 0061 4F040000 		.4byte	.LASF7
+ 222 0065 02       		.uleb128 0x2
+ 223 0066 08       		.byte	0x8
+ 224 0067 05       		.byte	0x5
+ 225 0068 66010000 		.4byte	.LASF8
+ 226 006c 02       		.uleb128 0x2
+ 227 006d 08       		.byte	0x8
+ 228 006e 07       		.byte	0x7
+ 229 006f 8B020000 		.4byte	.LASF9
+ 230 0073 04       		.uleb128 0x4
+ 231 0074 04       		.byte	0x4
+ 232 0075 05       		.byte	0x5
+ 233 0076 696E7400 		.ascii	"int\000"
+ 234 007a 02       		.uleb128 0x2
+ 235 007b 04       		.byte	0x4
+ 236 007c 07       		.byte	0x7
+ 237 007d A9020000 		.4byte	.LASF10
+ 238 0081 03       		.uleb128 0x3
+ 239 0082 C6000000 		.4byte	.LASF11
+ 240 0086 03       		.byte	0x3
+ 241 0087 18       		.byte	0x18
+ 242 0088 2C000000 		.4byte	0x2c
+ 243 008c 03       		.uleb128 0x3
+ 244 008d EE030000 		.4byte	.LASF12
+ 245 0091 03       		.byte	0x3
+ 246 0092 2C       		.byte	0x2c
+ 247 0093 4C000000 		.4byte	0x4c
+ 248 0097 02       		.uleb128 0x2
+ 249 0098 04       		.byte	0x4
+ 250 0099 04       		.byte	0x4
+ 251 009a 2B010000 		.4byte	.LASF13
+ 252 009e 02       		.uleb128 0x2
+ 253 009f 08       		.byte	0x8
+ 254 00a0 04       		.byte	0x4
+ 255 00a1 61040000 		.4byte	.LASF14
+ 256 00a5 02       		.uleb128 0x2
+ 257 00a6 01       		.byte	0x1
+ 258 00a7 08       		.byte	0x8
+ 259 00a8 D8030000 		.4byte	.LASF15
+ 260 00ac 02       		.uleb128 0x2
+ 261 00ad 08       		.byte	0x8
+ 262 00ae 04       		.byte	0x4
+ 263 00af 2E020000 		.4byte	.LASF16
+ 264 00b3 03       		.uleb128 0x3
+ 265 00b4 FA000000 		.4byte	.LASF17
+ 266 00b8 04       		.byte	0x4
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 7
+
+
+ 267 00b9 53       		.byte	0x53
+ 268 00ba 73000000 		.4byte	0x73
+ 269 00be 03       		.uleb128 0x3
+ 270 00bf A0000000 		.4byte	.LASF18
+ 271 00c3 04       		.byte	0x4
+ 272 00c4 54       		.byte	0x54
+ 273 00c5 7A000000 		.4byte	0x7a
+ 274 00c9 03       		.uleb128 0x3
+ 275 00ca 7A040000 		.4byte	.LASF19
+ 276 00ce 05       		.byte	0x5
+ 277 00cf 4D       		.byte	0x4d
+ 278 00d0 BE000000 		.4byte	0xbe
+ 279 00d4 03       		.uleb128 0x3
+ 280 00d5 84000000 		.4byte	.LASF20
+ 281 00d9 05       		.byte	0x5
+ 282 00da 4F       		.byte	0x4f
+ 283 00db BE000000 		.4byte	0xbe
+ 284 00df 03       		.uleb128 0x3
+ 285 00e0 AA000000 		.4byte	.LASF21
+ 286 00e4 05       		.byte	0x5
+ 287 00e5 78       		.byte	0x78
+ 288 00e6 B3000000 		.4byte	0xb3
+ 289 00ea 02       		.uleb128 0x2
+ 290 00eb 04       		.byte	0x4
+ 291 00ec 07       		.byte	0x7
+ 292 00ed 6D000000 		.4byte	.LASF22
+ 293 00f1 05       		.uleb128 0x5
+ 294 00f2 01       		.byte	0x1
+ 295 00f3 25000000 		.4byte	0x25
+ 296 00f7 06       		.byte	0x6
+ 297 00f8 CF       		.byte	0xcf
+ 298 00f9 9A010000 		.4byte	0x19a
+ 299 00fd 06       		.uleb128 0x6
+ 300 00fe 28000000 		.4byte	.LASF23
+ 301 0102 00       		.byte	0
+ 302 0103 07       		.uleb128 0x7
+ 303 0104 0F050000 		.4byte	.LASF24
+ 304 0108 7F       		.sleb128 -1
+ 305 0109 07       		.uleb128 0x7
+ 306 010a CC020000 		.4byte	.LASF25
+ 307 010e 7E       		.sleb128 -2
+ 308 010f 07       		.uleb128 0x7
+ 309 0110 76000000 		.4byte	.LASF26
+ 310 0114 7D       		.sleb128 -3
+ 311 0115 07       		.uleb128 0x7
+ 312 0116 18050000 		.4byte	.LASF27
+ 313 011a 7C       		.sleb128 -4
+ 314 011b 07       		.uleb128 0x7
+ 315 011c 1C010000 		.4byte	.LASF28
+ 316 0120 7B       		.sleb128 -5
+ 317 0121 07       		.uleb128 0x7
+ 318 0122 47000000 		.4byte	.LASF29
+ 319 0126 7A       		.sleb128 -6
+ 320 0127 07       		.uleb128 0x7
+ 321 0128 BA010000 		.4byte	.LASF30
+ 322 012c 79       		.sleb128 -7
+ 323 012d 07       		.uleb128 0x7
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 8
+
+
+ 324 012e 00000000 		.4byte	.LASF31
+ 325 0132 78       		.sleb128 -8
+ 326 0133 07       		.uleb128 0x7
+ 327 0134 DA020000 		.4byte	.LASF32
+ 328 0138 77       		.sleb128 -9
+ 329 0139 07       		.uleb128 0x7
+ 330 013a D7010000 		.4byte	.LASF33
+ 331 013e 76       		.sleb128 -10
+ 332 013f 07       		.uleb128 0x7
+ 333 0140 45050000 		.4byte	.LASF34
+ 334 0144 75       		.sleb128 -11
+ 335 0145 07       		.uleb128 0x7
+ 336 0146 B6020000 		.4byte	.LASF35
+ 337 014a 74       		.sleb128 -12
+ 338 014b 07       		.uleb128 0x7
+ 339 014c 68040000 		.4byte	.LASF36
+ 340 0150 73       		.sleb128 -13
+ 341 0151 07       		.uleb128 0x7
+ 342 0152 15000000 		.4byte	.LASF37
+ 343 0156 72       		.sleb128 -14
+ 344 0157 07       		.uleb128 0x7
+ 345 0158 0D040000 		.4byte	.LASF38
+ 346 015c 71       		.sleb128 -15
+ 347 015d 07       		.uleb128 0x7
+ 348 015e EF010000 		.4byte	.LASF39
+ 349 0162 70       		.sleb128 -16
+ 350 0163 07       		.uleb128 0x7
+ 351 0164 8C000000 		.4byte	.LASF40
+ 352 0168 6F       		.sleb128 -17
+ 353 0169 07       		.uleb128 0x7
+ 354 016a 58000000 		.4byte	.LASF41
+ 355 016e 6E       		.sleb128 -18
+ 356 016f 07       		.uleb128 0x7
+ 357 0170 8D010000 		.4byte	.LASF42
+ 358 0174 6D       		.sleb128 -19
+ 359 0175 07       		.uleb128 0x7
+ 360 0176 6C020000 		.4byte	.LASF43
+ 361 017a 6C       		.sleb128 -20
+ 362 017b 07       		.uleb128 0x7
+ 363 017c 00020000 		.4byte	.LASF44
+ 364 0180 6B       		.sleb128 -21
+ 365 0181 07       		.uleb128 0x7
+ 366 0182 DA040000 		.4byte	.LASF45
+ 367 0186 6A       		.sleb128 -22
+ 368 0187 07       		.uleb128 0x7
+ 369 0188 CE000000 		.4byte	.LASF46
+ 370 018c 69       		.sleb128 -23
+ 371 018d 07       		.uleb128 0x7
+ 372 018e A0010000 		.4byte	.LASF47
+ 373 0192 68       		.sleb128 -24
+ 374 0193 07       		.uleb128 0x7
+ 375 0194 4D010000 		.4byte	.LASF48
+ 376 0198 67       		.sleb128 -25
+ 377 0199 00       		.byte	0
+ 378 019a 03       		.uleb128 0x3
+ 379 019b 40050000 		.4byte	.LASF49
+ 380 019f 06       		.byte	0x6
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 9
+
+
+ 381 01a0 EA       		.byte	0xea
+ 382 01a1 F1000000 		.4byte	0xf1
+ 383 01a5 08       		.uleb128 0x8
+ 384 01a6 25020000 		.4byte	.LASF75
+ 385 01aa 01       		.byte	0x1
+ 386 01ab 37000000 		.4byte	0x37
+ 387 01af 07       		.byte	0x7
+ 388 01b0 62       		.byte	0x62
+ 389 01b1 C2010000 		.4byte	0x1c2
+ 390 01b5 06       		.uleb128 0x6
+ 391 01b6 C4020000 		.4byte	.LASF50
+ 392 01ba 00       		.byte	0
+ 393 01bb 06       		.uleb128 0x6
+ 394 01bc A2020000 		.4byte	.LASF51
+ 395 01c0 01       		.byte	0x1
+ 396 01c1 00       		.byte	0
+ 397 01c2 03       		.uleb128 0x3
+ 398 01c3 CF040000 		.4byte	.LASF52
+ 399 01c7 07       		.byte	0x7
+ 400 01c8 67       		.byte	0x67
+ 401 01c9 A5010000 		.4byte	0x1a5
+ 402 01cd 05       		.uleb128 0x5
+ 403 01ce 01       		.byte	0x1
+ 404 01cf 37000000 		.4byte	0x37
+ 405 01d3 01       		.byte	0x1
+ 406 01d4 08       		.byte	0x8
+ 407 01d5 F2010000 		.4byte	0x1f2
+ 408 01d9 06       		.uleb128 0x6
+ 409 01da 58020000 		.4byte	.LASF53
+ 410 01de 00       		.byte	0
+ 411 01df 06       		.uleb128 0x6
+ 412 01e0 F6030000 		.4byte	.LASF54
+ 413 01e4 01       		.byte	0x1
+ 414 01e5 06       		.uleb128 0x6
+ 415 01e6 EC040000 		.4byte	.LASF55
+ 416 01ea 02       		.byte	0x2
+ 417 01eb 06       		.uleb128 0x6
+ 418 01ec B1000000 		.4byte	.LASF56
+ 419 01f0 03       		.byte	0x3
+ 420 01f1 00       		.byte	0
+ 421 01f2 03       		.uleb128 0x3
+ 422 01f3 82040000 		.4byte	.LASF57
+ 423 01f7 01       		.byte	0x1
+ 424 01f8 0D       		.byte	0xd
+ 425 01f9 CD010000 		.4byte	0x1cd
+ 426 01fd 09       		.uleb128 0x9
+ 427 01fe 33000000 		.4byte	.LASF76
+ 428 0202 01       		.byte	0x1
+ 429 0203 23       		.byte	0x23
+ 430 0204 9A010000 		.4byte	0x19a
+ 431 0208 00000000 		.4byte	.LFB110
+ 432 020c 98000000 		.4byte	.LFE110-.LFB110
+ 433 0210 01       		.uleb128 0x1
+ 434 0211 9C       		.byte	0x9c
+ 435 0212 4D020000 		.4byte	0x24d
+ 436 0216 0A       		.uleb128 0xa
+ 437 0217 1E000000 		.4byte	.LVL0
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 10
+
+
+ 438 021b F8020000 		.4byte	0x2f8
+ 439 021f 0A       		.uleb128 0xa
+ 440 0220 3A000000 		.4byte	.LVL1
+ 441 0224 03030000 		.4byte	0x303
+ 442 0228 0A       		.uleb128 0xa
+ 443 0229 46000000 		.4byte	.LVL2
+ 444 022d F8020000 		.4byte	0x2f8
+ 445 0231 0A       		.uleb128 0xa
+ 446 0232 62000000 		.4byte	.LVL3
+ 447 0236 0E030000 		.4byte	0x30e
+ 448 023a 0A       		.uleb128 0xa
+ 449 023b 6E000000 		.4byte	.LVL4
+ 450 023f 03030000 		.4byte	0x303
+ 451 0243 0A       		.uleb128 0xa
+ 452 0244 7A000000 		.4byte	.LVL5
+ 453 0248 F8020000 		.4byte	0x2f8
+ 454 024c 00       		.byte	0
+ 455 024d 0B       		.uleb128 0xb
+ 456 024e C2010000 		.4byte	0x1c2
+ 457 0252 5D020000 		.4byte	0x25d
+ 458 0256 0C       		.uleb128 0xc
+ 459 0257 EA000000 		.4byte	0xea
+ 460 025b 02       		.byte	0x2
+ 461 025c 00       		.byte	0
+ 462 025d 0D       		.uleb128 0xd
+ 463 025e B7040000 		.4byte	.LASF58
+ 464 0262 07       		.byte	0x7
+ 465 0263 87       		.byte	0x87
+ 466 0264 4D020000 		.4byte	0x24d
+ 467 0268 03       		.byte	0x3
+ 468 0269 00       		.byte	0
+ 469 026a 00       		.byte	0
+ 470 026b 00       		.byte	0
+ 471 026c 0E       		.uleb128 0xe
+ 472 026d CC010000 		.4byte	.LASF59
+ 473 0271 01       		.byte	0x1
+ 474 0272 16       		.byte	0x16
+ 475 0273 F2010000 		.4byte	0x1f2
+ 476 0277 05       		.uleb128 0x5
+ 477 0278 03       		.byte	0x3
+ 478 0279 00000000 		.4byte	faderState
+ 479 027d 0E       		.uleb128 0xe
+ 480 027e C1040000 		.4byte	.LASF60
+ 481 0282 01       		.byte	0x1
+ 482 0283 17       		.byte	0x17
+ 483 0284 81000000 		.4byte	0x81
+ 484 0288 05       		.uleb128 0x5
+ 485 0289 03       		.byte	0x3
+ 486 028a 01000000 		.4byte	redBrightness
+ 487 028e 0E       		.uleb128 0xe
+ 488 028f DD030000 		.4byte	.LASF61
+ 489 0293 01       		.byte	0x1
+ 490 0294 18       		.byte	0x18
+ 491 0295 81000000 		.4byte	0x81
+ 492 0299 05       		.uleb128 0x5
+ 493 029a 03       		.byte	0x3
+ 494 029b 02000000 		.4byte	yellowBrightness
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 11
+
+
+ 495 029f 0E       		.uleb128 0xe
+ 496 02a0 3A020000 		.4byte	.LASF62
+ 497 02a4 01       		.byte	0x1
+ 498 02a5 19       		.byte	0x19
+ 499 02a6 81000000 		.4byte	0x81
+ 500 02aa 05       		.uleb128 0x5
+ 501 02ab 03       		.byte	0x3
+ 502 02ac 03000000 		.4byte	greenBrightness
+ 503 02b0 0F       		.uleb128 0xf
+ 504 02b1 28050000 		.4byte	.LASF63
+ 505 02b5 08       		.byte	0x8
+ 506 02b6 40       		.byte	0x40
+ 507 02b7 C9000000 		.4byte	0xc9
+ 508 02bb 0F       		.uleb128 0xf
+ 509 02bc 74010000 		.4byte	.LASF64
+ 510 02c0 08       		.byte	0x8
+ 511 02c1 47       		.byte	0x47
+ 512 02c2 D4000000 		.4byte	0xd4
+ 513 02c6 0F       		.uleb128 0xf
+ 514 02c7 3C040000 		.4byte	.LASF65
+ 515 02cb 08       		.byte	0x8
+ 516 02cc 4A       		.byte	0x4a
+ 517 02cd C9000000 		.4byte	0xc9
+ 518 02d1 0F       		.uleb128 0xf
+ 519 02d2 03010000 		.4byte	.LASF66
+ 520 02d6 09       		.byte	0x9
+ 521 02d7 48       		.byte	0x48
+ 522 02d8 DF000000 		.4byte	0xdf
+ 523 02dc 0F       		.uleb128 0xf
+ 524 02dd E5000000 		.4byte	.LASF67
+ 525 02e1 0A       		.byte	0xa
+ 526 02e2 44       		.byte	0x44
+ 527 02e3 C9000000 		.4byte	0xc9
+ 528 02e7 10       		.uleb128 0x10
+ 529 02e8 02050000 		.4byte	.LASF68
+ 530 02ec 0B       		.byte	0xb
+ 531 02ed 1207     		.2byte	0x712
+ 532 02ef F3020000 		.4byte	0x2f3
+ 533 02f3 11       		.uleb128 0x11
+ 534 02f4 8C000000 		.4byte	0x8c
+ 535 02f8 12       		.uleb128 0x12
+ 536 02f9 94040000 		.4byte	.LASF69
+ 537 02fd 94040000 		.4byte	.LASF69
+ 538 0301 0C       		.byte	0xc
+ 539 0302 C3       		.byte	0xc3
+ 540 0303 12       		.uleb128 0x12
+ 541 0304 31010000 		.4byte	.LASF70
+ 542 0308 31010000 		.4byte	.LASF70
+ 543 030c 0D       		.byte	0xd
+ 544 030d C3       		.byte	0xc3
+ 545 030e 12       		.uleb128 0x12
+ 546 030f 21040000 		.4byte	.LASF71
+ 547 0313 21040000 		.4byte	.LASF71
+ 548 0317 0E       		.byte	0xe
+ 549 0318 C3       		.byte	0xc3
+ 550 0319 00       		.byte	0
+ 551              		.section	.debug_abbrev,"",%progbits
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 12
+
+
+ 552              	.Ldebug_abbrev0:
+ 553 0000 01       		.uleb128 0x1
+ 554 0001 11       		.uleb128 0x11
+ 555 0002 01       		.byte	0x1
+ 556 0003 25       		.uleb128 0x25
+ 557 0004 0E       		.uleb128 0xe
+ 558 0005 13       		.uleb128 0x13
+ 559 0006 0B       		.uleb128 0xb
+ 560 0007 03       		.uleb128 0x3
+ 561 0008 0E       		.uleb128 0xe
+ 562 0009 1B       		.uleb128 0x1b
+ 563 000a 0E       		.uleb128 0xe
+ 564 000b 55       		.uleb128 0x55
+ 565 000c 17       		.uleb128 0x17
+ 566 000d 11       		.uleb128 0x11
+ 567 000e 01       		.uleb128 0x1
+ 568 000f 10       		.uleb128 0x10
+ 569 0010 17       		.uleb128 0x17
+ 570 0011 00       		.byte	0
+ 571 0012 00       		.byte	0
+ 572 0013 02       		.uleb128 0x2
+ 573 0014 24       		.uleb128 0x24
+ 574 0015 00       		.byte	0
+ 575 0016 0B       		.uleb128 0xb
+ 576 0017 0B       		.uleb128 0xb
+ 577 0018 3E       		.uleb128 0x3e
+ 578 0019 0B       		.uleb128 0xb
+ 579 001a 03       		.uleb128 0x3
+ 580 001b 0E       		.uleb128 0xe
+ 581 001c 00       		.byte	0
+ 582 001d 00       		.byte	0
+ 583 001e 03       		.uleb128 0x3
+ 584 001f 16       		.uleb128 0x16
+ 585 0020 00       		.byte	0
+ 586 0021 03       		.uleb128 0x3
+ 587 0022 0E       		.uleb128 0xe
+ 588 0023 3A       		.uleb128 0x3a
+ 589 0024 0B       		.uleb128 0xb
+ 590 0025 3B       		.uleb128 0x3b
+ 591 0026 0B       		.uleb128 0xb
+ 592 0027 49       		.uleb128 0x49
+ 593 0028 13       		.uleb128 0x13
+ 594 0029 00       		.byte	0
+ 595 002a 00       		.byte	0
+ 596 002b 04       		.uleb128 0x4
+ 597 002c 24       		.uleb128 0x24
+ 598 002d 00       		.byte	0
+ 599 002e 0B       		.uleb128 0xb
+ 600 002f 0B       		.uleb128 0xb
+ 601 0030 3E       		.uleb128 0x3e
+ 602 0031 0B       		.uleb128 0xb
+ 603 0032 03       		.uleb128 0x3
+ 604 0033 08       		.uleb128 0x8
+ 605 0034 00       		.byte	0
+ 606 0035 00       		.byte	0
+ 607 0036 05       		.uleb128 0x5
+ 608 0037 04       		.uleb128 0x4
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 13
+
+
+ 609 0038 01       		.byte	0x1
+ 610 0039 0B       		.uleb128 0xb
+ 611 003a 0B       		.uleb128 0xb
+ 612 003b 49       		.uleb128 0x49
+ 613 003c 13       		.uleb128 0x13
+ 614 003d 3A       		.uleb128 0x3a
+ 615 003e 0B       		.uleb128 0xb
+ 616 003f 3B       		.uleb128 0x3b
+ 617 0040 0B       		.uleb128 0xb
+ 618 0041 01       		.uleb128 0x1
+ 619 0042 13       		.uleb128 0x13
+ 620 0043 00       		.byte	0
+ 621 0044 00       		.byte	0
+ 622 0045 06       		.uleb128 0x6
+ 623 0046 28       		.uleb128 0x28
+ 624 0047 00       		.byte	0
+ 625 0048 03       		.uleb128 0x3
+ 626 0049 0E       		.uleb128 0xe
+ 627 004a 1C       		.uleb128 0x1c
+ 628 004b 0B       		.uleb128 0xb
+ 629 004c 00       		.byte	0
+ 630 004d 00       		.byte	0
+ 631 004e 07       		.uleb128 0x7
+ 632 004f 28       		.uleb128 0x28
+ 633 0050 00       		.byte	0
+ 634 0051 03       		.uleb128 0x3
+ 635 0052 0E       		.uleb128 0xe
+ 636 0053 1C       		.uleb128 0x1c
+ 637 0054 0D       		.uleb128 0xd
+ 638 0055 00       		.byte	0
+ 639 0056 00       		.byte	0
+ 640 0057 08       		.uleb128 0x8
+ 641 0058 04       		.uleb128 0x4
+ 642 0059 01       		.byte	0x1
+ 643 005a 03       		.uleb128 0x3
+ 644 005b 0E       		.uleb128 0xe
+ 645 005c 0B       		.uleb128 0xb
+ 646 005d 0B       		.uleb128 0xb
+ 647 005e 49       		.uleb128 0x49
+ 648 005f 13       		.uleb128 0x13
+ 649 0060 3A       		.uleb128 0x3a
+ 650 0061 0B       		.uleb128 0xb
+ 651 0062 3B       		.uleb128 0x3b
+ 652 0063 0B       		.uleb128 0xb
+ 653 0064 01       		.uleb128 0x1
+ 654 0065 13       		.uleb128 0x13
+ 655 0066 00       		.byte	0
+ 656 0067 00       		.byte	0
+ 657 0068 09       		.uleb128 0x9
+ 658 0069 2E       		.uleb128 0x2e
+ 659 006a 01       		.byte	0x1
+ 660 006b 3F       		.uleb128 0x3f
+ 661 006c 19       		.uleb128 0x19
+ 662 006d 03       		.uleb128 0x3
+ 663 006e 0E       		.uleb128 0xe
+ 664 006f 3A       		.uleb128 0x3a
+ 665 0070 0B       		.uleb128 0xb
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 14
+
+
+ 666 0071 3B       		.uleb128 0x3b
+ 667 0072 0B       		.uleb128 0xb
+ 668 0073 49       		.uleb128 0x49
+ 669 0074 13       		.uleb128 0x13
+ 670 0075 11       		.uleb128 0x11
+ 671 0076 01       		.uleb128 0x1
+ 672 0077 12       		.uleb128 0x12
+ 673 0078 06       		.uleb128 0x6
+ 674 0079 40       		.uleb128 0x40
+ 675 007a 18       		.uleb128 0x18
+ 676 007b 9742     		.uleb128 0x2117
+ 677 007d 19       		.uleb128 0x19
+ 678 007e 01       		.uleb128 0x1
+ 679 007f 13       		.uleb128 0x13
+ 680 0080 00       		.byte	0
+ 681 0081 00       		.byte	0
+ 682 0082 0A       		.uleb128 0xa
+ 683 0083 898201   		.uleb128 0x4109
+ 684 0086 00       		.byte	0
+ 685 0087 11       		.uleb128 0x11
+ 686 0088 01       		.uleb128 0x1
+ 687 0089 31       		.uleb128 0x31
+ 688 008a 13       		.uleb128 0x13
+ 689 008b 00       		.byte	0
+ 690 008c 00       		.byte	0
+ 691 008d 0B       		.uleb128 0xb
+ 692 008e 01       		.uleb128 0x1
+ 693 008f 01       		.byte	0x1
+ 694 0090 49       		.uleb128 0x49
+ 695 0091 13       		.uleb128 0x13
+ 696 0092 01       		.uleb128 0x1
+ 697 0093 13       		.uleb128 0x13
+ 698 0094 00       		.byte	0
+ 699 0095 00       		.byte	0
+ 700 0096 0C       		.uleb128 0xc
+ 701 0097 21       		.uleb128 0x21
+ 702 0098 00       		.byte	0
+ 703 0099 49       		.uleb128 0x49
+ 704 009a 13       		.uleb128 0x13
+ 705 009b 2F       		.uleb128 0x2f
+ 706 009c 0B       		.uleb128 0xb
+ 707 009d 00       		.byte	0
+ 708 009e 00       		.byte	0
+ 709 009f 0D       		.uleb128 0xd
+ 710 00a0 34       		.uleb128 0x34
+ 711 00a1 00       		.byte	0
+ 712 00a2 03       		.uleb128 0x3
+ 713 00a3 0E       		.uleb128 0xe
+ 714 00a4 3A       		.uleb128 0x3a
+ 715 00a5 0B       		.uleb128 0xb
+ 716 00a6 3B       		.uleb128 0x3b
+ 717 00a7 0B       		.uleb128 0xb
+ 718 00a8 49       		.uleb128 0x49
+ 719 00a9 13       		.uleb128 0x13
+ 720 00aa 1C       		.uleb128 0x1c
+ 721 00ab 0A       		.uleb128 0xa
+ 722 00ac 00       		.byte	0
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 15
+
+
+ 723 00ad 00       		.byte	0
+ 724 00ae 0E       		.uleb128 0xe
+ 725 00af 34       		.uleb128 0x34
+ 726 00b0 00       		.byte	0
+ 727 00b1 03       		.uleb128 0x3
+ 728 00b2 0E       		.uleb128 0xe
+ 729 00b3 3A       		.uleb128 0x3a
+ 730 00b4 0B       		.uleb128 0xb
+ 731 00b5 3B       		.uleb128 0x3b
+ 732 00b6 0B       		.uleb128 0xb
+ 733 00b7 49       		.uleb128 0x49
+ 734 00b8 13       		.uleb128 0x13
+ 735 00b9 02       		.uleb128 0x2
+ 736 00ba 18       		.uleb128 0x18
+ 737 00bb 00       		.byte	0
+ 738 00bc 00       		.byte	0
+ 739 00bd 0F       		.uleb128 0xf
+ 740 00be 34       		.uleb128 0x34
+ 741 00bf 00       		.byte	0
+ 742 00c0 03       		.uleb128 0x3
+ 743 00c1 0E       		.uleb128 0xe
+ 744 00c2 3A       		.uleb128 0x3a
+ 745 00c3 0B       		.uleb128 0xb
+ 746 00c4 3B       		.uleb128 0x3b
+ 747 00c5 0B       		.uleb128 0xb
+ 748 00c6 49       		.uleb128 0x49
+ 749 00c7 13       		.uleb128 0x13
+ 750 00c8 3F       		.uleb128 0x3f
+ 751 00c9 19       		.uleb128 0x19
+ 752 00ca 3C       		.uleb128 0x3c
+ 753 00cb 19       		.uleb128 0x19
+ 754 00cc 00       		.byte	0
+ 755 00cd 00       		.byte	0
+ 756 00ce 10       		.uleb128 0x10
+ 757 00cf 34       		.uleb128 0x34
+ 758 00d0 00       		.byte	0
+ 759 00d1 03       		.uleb128 0x3
+ 760 00d2 0E       		.uleb128 0xe
+ 761 00d3 3A       		.uleb128 0x3a
+ 762 00d4 0B       		.uleb128 0xb
+ 763 00d5 3B       		.uleb128 0x3b
+ 764 00d6 05       		.uleb128 0x5
+ 765 00d7 49       		.uleb128 0x49
+ 766 00d8 13       		.uleb128 0x13
+ 767 00d9 3F       		.uleb128 0x3f
+ 768 00da 19       		.uleb128 0x19
+ 769 00db 3C       		.uleb128 0x3c
+ 770 00dc 19       		.uleb128 0x19
+ 771 00dd 00       		.byte	0
+ 772 00de 00       		.byte	0
+ 773 00df 11       		.uleb128 0x11
+ 774 00e0 35       		.uleb128 0x35
+ 775 00e1 00       		.byte	0
+ 776 00e2 49       		.uleb128 0x49
+ 777 00e3 13       		.uleb128 0x13
+ 778 00e4 00       		.byte	0
+ 779 00e5 00       		.byte	0
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 16
+
+
+ 780 00e6 12       		.uleb128 0x12
+ 781 00e7 2E       		.uleb128 0x2e
+ 782 00e8 00       		.byte	0
+ 783 00e9 3F       		.uleb128 0x3f
+ 784 00ea 19       		.uleb128 0x19
+ 785 00eb 3C       		.uleb128 0x3c
+ 786 00ec 19       		.uleb128 0x19
+ 787 00ed 6E       		.uleb128 0x6e
+ 788 00ee 0E       		.uleb128 0xe
+ 789 00ef 03       		.uleb128 0x3
+ 790 00f0 0E       		.uleb128 0xe
+ 791 00f1 3A       		.uleb128 0x3a
+ 792 00f2 0B       		.uleb128 0xb
+ 793 00f3 3B       		.uleb128 0x3b
+ 794 00f4 0B       		.uleb128 0xb
+ 795 00f5 00       		.byte	0
+ 796 00f6 00       		.byte	0
+ 797 00f7 00       		.byte	0
+ 798              		.section	.debug_aranges,"",%progbits
+ 799 0000 1C000000 		.4byte	0x1c
+ 800 0004 0200     		.2byte	0x2
+ 801 0006 00000000 		.4byte	.Ldebug_info0
+ 802 000a 04       		.byte	0x4
+ 803 000b 00       		.byte	0
+ 804 000c 0000     		.2byte	0
+ 805 000e 0000     		.2byte	0
+ 806 0010 00000000 		.4byte	.LFB110
+ 807 0014 98000000 		.4byte	.LFE110-.LFB110
+ 808 0018 00000000 		.4byte	0
+ 809 001c 00000000 		.4byte	0
+ 810              		.section	.debug_ranges,"",%progbits
+ 811              	.Ldebug_ranges0:
+ 812 0000 00000000 		.4byte	.LFB110
+ 813 0004 98000000 		.4byte	.LFE110
+ 814 0008 00000000 		.4byte	0
+ 815 000c 00000000 		.4byte	0
+ 816              		.section	.debug_line,"",%progbits
+ 817              	.Ldebug_line0:
+ 818 0000 7A020000 		.section	.debug_str,"MS",%progbits,1
+ 818      02005302 
+ 818      00000201 
+ 818      FB0E0D00 
+ 818      01010101 
+ 819              	.LASF31:
+ 820 0000 52435F45 		.ascii	"RC_ERROR_BUFFER_FULL\000"
+ 820      52524F52 
+ 820      5F425546 
+ 820      4645525F 
+ 820      46554C4C 
+ 821              	.LASF37:
+ 822 0015 52435F45 		.ascii	"RC_ERROR_READ_ONLY\000"
+ 822      52524F52 
+ 822      5F524541 
+ 822      445F4F4E 
+ 822      4C5900
+ 823              	.LASF23:
+ 824 0028 52435F53 		.ascii	"RC_SUCCESS\000"
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 17
+
+
+ 824      55434345 
+ 824      535300
+ 825              	.LASF76:
+ 826 0033 4C45445F 		.ascii	"LED_FADER\000"
+ 826      46414445 
+ 826      5200
+ 827              	.LASF2:
+ 828 003d 73686F72 		.ascii	"short int\000"
+ 828      7420696E 
+ 828      7400
+ 829              	.LASF29:
+ 830 0047 52435F45 		.ascii	"RC_ERROR_OVERRUN\000"
+ 830      52524F52 
+ 830      5F4F5645 
+ 830      5252554E 
+ 830      00
+ 831              	.LASF41:
+ 832 0058 52435F45 		.ascii	"RC_ERROR_WRITE_FAILS\000"
+ 832      52524F52 
+ 832      5F575249 
+ 832      54455F46 
+ 832      41494C53 
+ 833              	.LASF22:
+ 834 006d 73697A65 		.ascii	"sizetype\000"
+ 834      74797065 
+ 834      00
+ 835              	.LASF26:
+ 836 0076 52435F45 		.ascii	"RC_ERROR_ZERO\000"
+ 836      52524F52 
+ 836      5F5A4552 
+ 836      4F00
+ 837              	.LASF20:
+ 838 0084 45455F46 		.ascii	"EE_FREG\000"
+ 838      52454700 
+ 839              	.LASF40:
+ 840 008c 52435F45 		.ascii	"RC_ERROR_READ_FAILS\000"
+ 840      52524F52 
+ 840      5F524541 
+ 840      445F4641 
+ 840      494C5300 
+ 841              	.LASF18:
+ 842 00a0 45455F55 		.ascii	"EE_UINT32\000"
+ 842      494E5433 
+ 842      3200
+ 843              	.LASF21:
+ 844 00aa 45455F54 		.ascii	"EE_TID\000"
+ 844      494400
+ 845              	.LASF56:
+ 846 00b1 4C45445F 		.ascii	"LED_FADER_STATE_DONE\000"
+ 846      46414445 
+ 846      525F5354 
+ 846      4154455F 
+ 846      444F4E45 
+ 847              	.LASF11:
+ 848 00c6 75696E74 		.ascii	"uint8_t\000"
+ 848      385F7400 
+ 849              	.LASF46:
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 18
+
+
+ 850 00ce 52435F45 		.ascii	"RC_ERROR_INVALID_STATE\000"
+ 850      52524F52 
+ 850      5F494E56 
+ 850      414C4944 
+ 850      5F535441 
+ 851              	.LASF67:
+ 852 00e5 45455F49 		.ascii	"EE_IRQ_nesting_level\000"
+ 852      52515F6E 
+ 852      65737469 
+ 852      6E675F6C 
+ 852      6576656C 
+ 853              	.LASF17:
+ 854 00fa 45455F49 		.ascii	"EE_INT32\000"
+ 854      4E543332 
+ 854      00
+ 855              	.LASF66:
+ 856 0103 45455F73 		.ascii	"EE_std_endcycle_next_tid\000"
+ 856      74645F65 
+ 856      6E646379 
+ 856      636C655F 
+ 856      6E657874 
+ 857              	.LASF28:
+ 858 011c 52435F45 		.ascii	"RC_ERROR_RANGE\000"
+ 858      52524F52 
+ 858      5F52414E 
+ 858      474500
+ 859              	.LASF13:
+ 860 012b 666C6F61 		.ascii	"float\000"
+ 860      7400
+ 861              	.LASF70:
+ 862 0131 50574D5F 		.ascii	"PWM_LED_YELLOW_WriteCompare\000"
+ 862      4C45445F 
+ 862      59454C4C 
+ 862      4F575F57 
+ 862      72697465 
+ 863              	.LASF48:
+ 864 014d 52435F45 		.ascii	"RC_ERROR_NOT_IMPLEMENTED\000"
+ 864      52524F52 
+ 864      5F4E4F54 
+ 864      5F494D50 
+ 864      4C454D45 
+ 865              	.LASF8:
+ 866 0166 6C6F6E67 		.ascii	"long long int\000"
+ 866      206C6F6E 
+ 866      6720696E 
+ 866      7400
+ 867              	.LASF64:
+ 868 0174 45455F6F 		.ascii	"EE_oo_IRQ_suspend_status\000"
+ 868      6F5F4952 
+ 868      515F7375 
+ 868      7370656E 
+ 868      645F7374 
+ 869              	.LASF42:
+ 870 018d 52435F45 		.ascii	"RC_ERROR_NOT_MATCH\000"
+ 870      52524F52 
+ 870      5F4E4F54 
+ 870      5F4D4154 
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 19
+
+
+ 870      434800
+ 871              	.LASF47:
+ 872 01a0 52435F45 		.ascii	"RC_ERROR_UNKNOWN\000"
+ 872      52524F52 
+ 872      5F554E4B 
+ 872      4E4F574E 
+ 872      00
+ 873              	.LASF6:
+ 874 01b1 6C6F6E67 		.ascii	"long int\000"
+ 874      20696E74 
+ 874      00
+ 875              	.LASF30:
+ 876 01ba 52435F45 		.ascii	"RC_ERROR_UNDERRUN\000"
+ 876      52524F52 
+ 876      5F554E44 
+ 876      45525255 
+ 876      4E00
+ 877              	.LASF59:
+ 878 01cc 66616465 		.ascii	"faderState\000"
+ 878      72537461 
+ 878      746500
+ 879              	.LASF33:
+ 880 01d7 52435F45 		.ascii	"RC_ERROR_BUSY\000"
+ 880      52524F52 
+ 880      5F425553 
+ 880      5900
+ 881              	.LASF4:
+ 882 01e5 5F5F7569 		.ascii	"__uint8_t\000"
+ 882      6E74385F 
+ 882      7400
+ 883              	.LASF39:
+ 884 01ef 52435F45 		.ascii	"RC_ERROR_INVALID\000"
+ 884      52524F52 
+ 884      5F494E56 
+ 884      414C4944 
+ 884      00
+ 885              	.LASF44:
+ 886 0200 52435F45 		.ascii	"RC_ERROR_BAD_DATA\000"
+ 886      52524F52 
+ 886      5F424144 
+ 886      5F444154 
+ 886      4100
+ 887              	.LASF73:
+ 888 0212 736F7572 		.ascii	"source\\asw\\Fader.c\000"
+ 888      63655C61 
+ 888      73775C46 
+ 888      61646572 
+ 888      2E6300
+ 889              	.LASF75:
+ 890 0225 4C45444F 		.ascii	"LEDOnOff\000"
+ 890      6E4F6666 
+ 890      00
+ 891              	.LASF16:
+ 892 022e 6C6F6E67 		.ascii	"long double\000"
+ 892      20646F75 
+ 892      626C6500 
+ 893              	.LASF62:
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 20
+
+
+ 894 023a 67726565 		.ascii	"greenBrightness\000"
+ 894      6E427269 
+ 894      6768746E 
+ 894      65737300 
+ 895              	.LASF1:
+ 896 024a 756E7369 		.ascii	"unsigned char\000"
+ 896      676E6564 
+ 896      20636861 
+ 896      7200
+ 897              	.LASF53:
+ 898 0258 4C45445F 		.ascii	"LED_FADER_STATE_RED\000"
+ 898      46414445 
+ 898      525F5354 
+ 898      4154455F 
+ 898      52454400 
+ 899              	.LASF43:
+ 900 026c 52435F45 		.ascii	"RC_ERROR_BAD_PARAM\000"
+ 900      52524F52 
+ 900      5F424144 
+ 900      5F504152 
+ 900      414D00
+ 901              	.LASF0:
+ 902 027f 7369676E 		.ascii	"signed char\000"
+ 902      65642063 
+ 902      68617200 
+ 903              	.LASF9:
+ 904 028b 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 904      206C6F6E 
+ 904      6720756E 
+ 904      7369676E 
+ 904      65642069 
+ 905              	.LASF51:
+ 906 02a2 4C45445F 		.ascii	"LED_ON\000"
+ 906      4F4E00
+ 907              	.LASF10:
+ 908 02a9 756E7369 		.ascii	"unsigned int\000"
+ 908      676E6564 
+ 908      20696E74 
+ 908      00
+ 909              	.LASF35:
+ 910 02b6 52435F45 		.ascii	"RC_ERROR_OPEN\000"
+ 910      52524F52 
+ 910      5F4F5045 
+ 910      4E00
+ 911              	.LASF50:
+ 912 02c4 4C45445F 		.ascii	"LED_OFF\000"
+ 912      4F464600 
+ 913              	.LASF25:
+ 914 02cc 52435F45 		.ascii	"RC_ERROR_NULL\000"
+ 914      52524F52 
+ 914      5F4E554C 
+ 914      4C00
+ 915              	.LASF32:
+ 916 02da 52435F45 		.ascii	"RC_ERROR_BUFFER_EMTPY\000"
+ 916      52524F52 
+ 916      5F425546 
+ 916      4645525F 
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 21
+
+
+ 916      454D5450 
+ 917              	.LASF74:
+ 918 02f0 433A5C55 		.ascii	"C:\\Users\\divya\\Documents\\PSoC Creator\\LABASSIG"
+ 918      73657273 
+ 918      5C646976 
+ 918      79615C44 
+ 918      6F63756D 
+ 919 031e 4E4D454E 		.ascii	"NMENT\\ReactionGame.cydsn\000"
+ 919      545C5265 
+ 919      61637469 
+ 919      6F6E4761 
+ 919      6D652E63 
+ 920              	.LASF3:
+ 921 0337 73686F72 		.ascii	"short unsigned int\000"
+ 921      7420756E 
+ 921      7369676E 
+ 921      65642069 
+ 921      6E7400
+ 922              	.LASF72:
+ 923 034a 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 923      43313120 
+ 923      352E342E 
+ 923      31203230 
+ 923      31363036 
+ 924 037d 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 924      20726576 
+ 924      6973696F 
+ 924      6E203233 
+ 924      37373135 
+ 925 03b0 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 925      66756E63 
+ 925      74696F6E 
+ 925      2D736563 
+ 925      74696F6E 
+ 926              	.LASF15:
+ 927 03d8 63686172 		.ascii	"char\000"
+ 927      00
+ 928              	.LASF61:
+ 929 03dd 79656C6C 		.ascii	"yellowBrightness\000"
+ 929      6F774272 
+ 929      69676874 
+ 929      6E657373 
+ 929      00
+ 930              	.LASF12:
+ 931 03ee 696E7433 		.ascii	"int32_t\000"
+ 931      325F7400 
+ 932              	.LASF54:
+ 933 03f6 4C45445F 		.ascii	"LED_FADER_STATE_YELLOW\000"
+ 933      46414445 
+ 933      525F5354 
+ 933      4154455F 
+ 933      59454C4C 
+ 934              	.LASF38:
+ 935 040d 52435F45 		.ascii	"RC_ERROR_WRITE_ONLY\000"
+ 935      52524F52 
+ 935      5F575249 
+ 935      54455F4F 
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 22
+
+
+ 935      4E4C5900 
+ 936              	.LASF71:
+ 937 0421 50574D5F 		.ascii	"PWM_LED_GREEN_WriteCompare\000"
+ 937      4C45445F 
+ 937      47524545 
+ 937      4E5F5772 
+ 937      69746543 
+ 938              	.LASF65:
+ 939 043c 45455F41 		.ascii	"EE_ApplicationMode\000"
+ 939      70706C69 
+ 939      63617469 
+ 939      6F6E4D6F 
+ 939      646500
+ 940              	.LASF7:
+ 941 044f 6C6F6E67 		.ascii	"long unsigned int\000"
+ 941      20756E73 
+ 941      69676E65 
+ 941      6420696E 
+ 941      7400
+ 942              	.LASF14:
+ 943 0461 646F7562 		.ascii	"double\000"
+ 943      6C6500
+ 944              	.LASF36:
+ 945 0468 52435F45 		.ascii	"RC_ERROR_CHECKSUM\000"
+ 945      52524F52 
+ 945      5F434845 
+ 945      434B5355 
+ 945      4D00
+ 946              	.LASF19:
+ 947 047a 45455F55 		.ascii	"EE_UREG\000"
+ 947      52454700 
+ 948              	.LASF57:
+ 949 0482 4C45445F 		.ascii	"LED_FADER_State_t\000"
+ 949      46414445 
+ 949      525F5374 
+ 949      6174655F 
+ 949      7400
+ 950              	.LASF69:
+ 951 0494 50574D5F 		.ascii	"PWM_LED_RED_WriteCompare\000"
+ 951      4C45445F 
+ 951      5245445F 
+ 951      57726974 
+ 951      65436F6D 
+ 952              	.LASF5:
+ 953 04ad 5F5F696E 		.ascii	"__int32_t\000"
+ 953      7433325F 
+ 953      7400
+ 954              	.LASF58:
+ 955 04b7 4C45445F 		.ascii	"LED_STATE\000"
+ 955      53544154 
+ 955      4500
+ 956              	.LASF60:
+ 957 04c1 72656442 		.ascii	"redBrightness\000"
+ 957      72696768 
+ 957      746E6573 
+ 957      7300
+ 958              	.LASF52:
+ARM GAS  C:\Users\divya\AppData\Local\Temp\cctAmKMj.s 			page 23
+
+
+ 959 04cf 4C45444F 		.ascii	"LEDOnOff_t\000"
+ 959      6E4F6666 
+ 959      5F7400
+ 960              	.LASF45:
+ 961 04da 52435F45 		.ascii	"RC_ERROR_CANCELED\000"
+ 961      52524F52 
+ 961      5F43414E 
+ 961      43454C45 
+ 961      4400
+ 962              	.LASF55:
+ 963 04ec 4C45445F 		.ascii	"LED_FADER_STATE_GREEN\000"
+ 963      46414445 
+ 963      525F5354 
+ 963      4154455F 
+ 963      47524545 
+ 964              	.LASF68:
+ 965 0502 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 965      52784275 
+ 965      66666572 
+ 965      00
+ 966              	.LASF24:
+ 967 050f 52435F45 		.ascii	"RC_ERROR\000"
+ 967      52524F52 
+ 967      00
+ 968              	.LASF27:
+ 969 0518 52435F45 		.ascii	"RC_ERROR_MEMORY\000"
+ 969      52524F52 
+ 969      5F4D454D 
+ 969      4F525900 
+ 970              	.LASF63:
+ 971 0528 45455F6F 		.ascii	"EE_oo_IRQ_disable_count\000"
+ 971      6F5F4952 
+ 971      515F6469 
+ 971      7361626C 
+ 971      655F636F 
+ 972              	.LASF49:
+ 973 0540 52435F74 		.ascii	"RC_t\000"
+ 973      00
+ 974              	.LASF34:
+ 975 0545 52435F45 		.ascii	"RC_ERROR_TIME_OUT\000"
+ 975      52524F52 
+ 975      5F54494D 
+ 975      455F4F55 
+ 975      5400
+ 976              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
